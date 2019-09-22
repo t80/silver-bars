@@ -3,6 +3,7 @@ package com.creditsuisse.silverbars.integration;
 import com.creditsuisse.silverbars.domain.OrderType;
 import com.creditsuisse.silverbars.infrastructure.api.in.SilverBarOrderDto;
 import com.creditsuisse.silverbars.infrastructure.api.out.OrderResponseDto;
+import com.creditsuisse.silverbars.infrastructure.api.out.OrderSummaryDto;
 import com.creditsuisse.silverbars.integration.utils.SilverBarClient;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,5 +59,13 @@ public class SilverBarOrderApiTest {
         silverBarClient.deleteOrder(orderResponseDto.getOrderId());
 
         assertThat(silverBarClient.lastHttpStatusCode()).isEqualTo("204");
+    }
+
+    @Test
+    public void getsLiveOrderSummary() throws IOException {
+
+        OrderSummaryDto liveOrderSummary = silverBarClient.getLiveOrderSummary();
+
+        assertThat(silverBarClient.lastHttpStatusCode()).isEqualTo("200");
     }
 }
