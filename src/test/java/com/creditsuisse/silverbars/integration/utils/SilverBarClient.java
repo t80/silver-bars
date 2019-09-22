@@ -3,6 +3,7 @@ package com.creditsuisse.silverbars.integration.utils;
 import com.creditsuisse.silverbars.infrastructure.api.in.SilverBarOrderDto;
 import com.creditsuisse.silverbars.infrastructure.api.out.OrderResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
+import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 
 public class SilverBarClient {
@@ -49,8 +51,31 @@ public class SilverBarClient {
         }
     }
 
+    public void deleteOrder(String orderId) {
+
+        try {
+
+            ResponseEntity<Void> responseEntity =
+                    restTemplate.exchange(
+                            "http://localhost:" + port + "/silverbars/orders/" + orderId,
+                            DELETE,
+                            new HttpEntity<>(new HttpHeaders()),
+                            new ParameterizedTypeReference<Void>() {
+                            });
+
+            lastStatusCode = responseEntity.getStatusCode().toString();
+
+        } catch (RestClientResponseException ex) {
+
+            lastStatusCode = String.valueOf(ex.getRawStatusCode());
+        }
+    }
+
     public String lastHttpStatusCode() {
-        return lastStatusCode;
+        String httpStatusCode = lastStatusCode;
+        lastStatusCode = null;
+
+        return httpStatusCode;
     }
 
     private OrderResponseDto handleException(RestClientResponseException ex) throws IOException {

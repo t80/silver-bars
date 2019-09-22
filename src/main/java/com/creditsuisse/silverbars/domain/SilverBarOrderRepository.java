@@ -18,4 +18,8 @@ public class SilverBarOrderRepository {
 
         return orderId;
     }
+
+    public void delete(UUID orderId) {
+        orders.remove(orderId);
+    }
 }

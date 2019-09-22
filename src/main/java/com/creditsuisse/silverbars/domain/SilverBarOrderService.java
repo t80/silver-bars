@@ -17,4 +17,8 @@ public class SilverBarOrderService {
         // TODO: validate?
         return silverBarOrderRepository.add(silverBarOrder);
     }
+
+    public void delete(UUID orderId) {
+        silverBarOrderRepository.delete(orderId);
+    }
 }

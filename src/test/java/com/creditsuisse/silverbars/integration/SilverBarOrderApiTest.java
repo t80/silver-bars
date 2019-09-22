@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.UUID;
 
+import static java.util.UUID.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -27,7 +28,7 @@ public class SilverBarOrderApiTest {
     private SilverBarClient silverBarClient;
 
     private SilverBarOrderDto silverBarOrderDto = new SilverBarOrderDto(
-            UUID.randomUUID().toString(),
+            randomUUID().toString(),
             "1.5",
             "100",
             OrderType.BUY
@@ -39,12 +40,22 @@ public class SilverBarOrderApiTest {
     }
 
     @Test
-    public void registersOrderSuccessfully() throws IOException {
+    public void registersOrder() throws IOException {
 
         OrderResponseDto orderResponseDto = silverBarClient.registerOrder(silverBarOrderDto);
 
         assertThat(silverBarClient.lastHttpStatusCode()).isEqualTo("201");
-        assertThat(UUID.fromString(orderResponseDto.getOrderId()))
+        assertThat(fromString(orderResponseDto.getOrderId()))
                 .isInstanceOf(UUID.class);
+    }
+
+    @Test
+    public void deletesAnOrder() throws IOException {
+
+        OrderResponseDto orderResponseDto = silverBarClient.registerOrder(silverBarOrderDto);
+
+        silverBarClient.deleteOrder(orderResponseDto.getOrderId());
+
+        assertThat(silverBarClient.lastHttpStatusCode()).isEqualTo("204");
     }
 }

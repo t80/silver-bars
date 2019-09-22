@@ -7,15 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-
 @Slf4j
-@RestController("/silverbars/orders")
+@RestController
+@RequestMapping("/silverbars/orders")
 public class SilverBarsOrdersResource {
 
     private final SilverBarOrderService silverBarOrderService;
@@ -33,5 +31,15 @@ public class SilverBarsOrdersResource {
         return ResponseEntity
                 .status(201)
                 .body(new OrderResponseDto(orderId));
+    }
+
+    @DeleteMapping("{orderId}")
+    public HttpEntity<Void> deleteOrder (@PathVariable("orderId") String orderId) {
+
+        silverBarOrderService.delete(UUID.fromString(orderId));
+
+        return ResponseEntity
+                .status(204)
+                .build();
     }
 }

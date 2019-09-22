@@ -29,7 +29,7 @@ public class SilverBarOrderServiceTest {
     }
 
     @Test
-    public void addsOrderToRepository() {
+    public void registersOrder() {
 
         when(orderRepository.add(someSilverBarOrder)).thenReturn(someOrderId);
 
@@ -38,5 +38,13 @@ public class SilverBarOrderServiceTest {
         verify(orderRepository, times(1)).add(someSilverBarOrder);
 
         assertThat(orderId).isEqualTo(someOrderId);
+    }
+
+    @Test
+    public void deletesOrder() {
+
+        silverBarOrderService.delete(someOrderId);
+
+        verify(orderRepository, times(1)).delete(someOrderId);
     }
 }
