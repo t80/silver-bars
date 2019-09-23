@@ -24,8 +24,8 @@ public class ExceptionMapper {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<String> catchAll(
             HttpServletRequest request,
-            Exception e
-    ) {
+            Exception e) {
+
         log.info("Exception: {}", e);
 
         return new ResponseEntity<>(INTERNAL_SERVER_ERROR);
@@ -34,8 +34,8 @@ public class ExceptionMapper {
     @ExceptionHandler(InvalidParameterException.class)
     protected ResponseEntity<String> handleInvalidParamerterException(
             HttpServletRequest request,
-            Exception e
-    ) {
+            Exception e) {
+
         log.error("Exception: {}", e);
 
         return new ResponseEntity<>(BAD_REQUEST);
