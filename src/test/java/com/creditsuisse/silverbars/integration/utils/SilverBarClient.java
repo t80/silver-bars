@@ -1,17 +1,14 @@
 package com.creditsuisse.silverbars.integration.utils;
 
-import com.creditsuisse.silverbars.infrastructure.api.in.SilverBarOrderDto;
+import com.creditsuisse.silverbars.domain.SilverBarOrder;
 import com.creditsuisse.silverbars.infrastructure.api.out.OrderResponseDto;
 import com.creditsuisse.silverbars.infrastructure.api.out.OrderSummaryDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
 
 import static java.util.Arrays.asList;
 import static org.springframework.http.HttpMethod.DELETE;
@@ -22,7 +19,6 @@ public class SilverBarClient {
 
     private final String port;
     private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private String lastStatusCode;
 
@@ -30,7 +26,7 @@ public class SilverBarClient {
         this.port = port;
     }
 
-    public OrderResponseDto registerOrder(SilverBarOrderDto silverBarOrderDto) throws IOException {
+    public OrderResponseDto registerOrder(SilverBarOrder silverBarOrderDto) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON_UTF8);
@@ -48,7 +44,9 @@ public class SilverBarClient {
 
         } catch (RestClientResponseException ex) {
 
-            return handleException(ex, OrderResponseDto.class);
+            lastStatusCode = String.valueOf(ex.getRawStatusCode());
+
+            return null;
         }
     }
 
@@ -72,7 +70,7 @@ public class SilverBarClient {
         }
     }
 
-    public OrderSummaryDto getLiveOrderSummary() throws IOException {
+    public OrderSummaryDto getLiveOrderSummary() {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(asList(APPLICATION_JSON_UTF8));
@@ -93,7 +91,9 @@ public class SilverBarClient {
 
         } catch (RestClientResponseException ex) {
 
-            return handleException(ex, OrderSummaryDto.class);
+            lastStatusCode = String.valueOf(ex.getRawStatusCode());
+
+            return null;
         }
     }
 
@@ -102,13 +102,5 @@ public class SilverBarClient {
         lastStatusCode = null;
 
         return httpStatusCode;
-    }
-
-    private <T> T handleException(RestClientResponseException ex, Class<T> clazz) throws IOException {
-
-        lastStatusCode = String.valueOf(ex.getRawStatusCode());
-
-        return objectMapper.readValue(
-                ex.getResponseBodyAsString(), clazz);
     }
 }

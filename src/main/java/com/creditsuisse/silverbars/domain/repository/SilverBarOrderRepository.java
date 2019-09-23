@@ -1,5 +1,6 @@
-package com.creditsuisse.silverbars.domain;
+package com.creditsuisse.silverbars.domain.repository;
 
+import com.creditsuisse.silverbars.domain.SilverBarOrder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,5 +22,9 @@ public class SilverBarOrderRepository {
 
     public void delete(UUID orderId) {
         orders.remove(orderId);
+    }
+
+    public Collection<SilverBarOrder> fetchAll() {
+        return new ArrayList<>(orders.values());
     }
 }

@@ -1,5 +1,6 @@
 package com.creditsuisse.silverbars.infrastructure.controllers;
 
+import com.creditsuisse.silverbars.domain.LiveOrderSummary;
 import com.creditsuisse.silverbars.domain.SilverBarOrderService;
 import com.creditsuisse.silverbars.infrastructure.api.in.SilverBarOrderDto;
 import com.creditsuisse.silverbars.infrastructure.api.out.OrderResponseDto;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -26,7 +28,7 @@ public class SilverBarsOrdersResource {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public HttpEntity<OrderResponseDto> registerOrder(
-            @RequestBody SilverBarOrderDto silverBarOrderDto) {
+            @RequestBody @Valid SilverBarOrderDto silverBarOrderDto) {
 
         UUID orderId = silverBarOrderService.register(silverBarOrderDto);
 
@@ -48,11 +50,11 @@ public class SilverBarsOrdersResource {
     @GetMapping(value = "summary", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public HttpEntity<OrderSummaryDto> getLiveOrderSummary() {
 
-        OrderSummaryDto orderSummaryDto = new OrderSummaryDto(
-                new TreeMap<>(),
-                new TreeMap<>()
-        );
+        LiveOrderSummary liveOrderSummary = silverBarOrderService.liveOrderSummary();
 
-        return ResponseEntity.ok(orderSummaryDto);
+        return ResponseEntity.ok(
+                new OrderSummaryDto(
+                        liveOrderSummary.getSellOrders(),
+                        liveOrderSummary.getBuyOrders()));
     }
 }

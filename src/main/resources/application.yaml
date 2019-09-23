@@ -1,7 +1,3 @@
 logging:
   level:
     ROOT: DEBUG
-    com:
-      creditsuisse.silverbars: DEBUG
-    org:
-      springframework: DEBUG
