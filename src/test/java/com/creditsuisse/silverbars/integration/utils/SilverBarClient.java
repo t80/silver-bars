@@ -17,13 +17,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 
 public class SilverBarClient {
 
-    private final String port;
     private final RestTemplate restTemplate = new RestTemplate();
+    private final String baseUrl;
 
     private String lastStatusCode;
 
-    public SilverBarClient(String port) {
-        this.port = port;
+    public SilverBarClient(String port, String host, String rootPath) {
+        this.baseUrl = host + ":" + port + rootPath;
     }
 
     public OrderResponseDto registerOrder(SilverBarOrder silverBarOrderDto) {
@@ -34,7 +34,7 @@ public class SilverBarClient {
         try {
 
             ResponseEntity<OrderResponseDto> responseEntity = restTemplate.postForEntity(
-                    "http://localhost:" + port + "/silverbars/orders",
+                    baseUrl + "/orders",
                     new HttpEntity<>(silverBarOrderDto, headers),
                     OrderResponseDto.class);
 
@@ -56,7 +56,7 @@ public class SilverBarClient {
 
             ResponseEntity<Void> responseEntity =
                     restTemplate.exchange(
-                            "http://localhost:" + port + "/silverbars/orders/" + orderId,
+                            baseUrl + "/orders/" + orderId,
                             DELETE,
                             new HttpEntity<>(new HttpHeaders()),
                             new ParameterizedTypeReference<Void>() {
@@ -79,7 +79,7 @@ public class SilverBarClient {
 
             ResponseEntity<OrderSummaryDto> responseEntity =
                     restTemplate.exchange(
-                            "http://localhost:" + port + "/silverbars/orders/summary",
+                            baseUrl + "/orders/summary",
                             GET,
                             new HttpEntity<Void>(headers),
                             new ParameterizedTypeReference<OrderSummaryDto>() {

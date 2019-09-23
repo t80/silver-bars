@@ -9,12 +9,13 @@ import com.creditsuisse.silverbars.integration.utils.SilverBarClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import static com.creditsuisse.silverbars.Fixtures.someSilverBarOrderWithDefaults;
@@ -25,7 +26,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
+@ActiveProfiles("integration")
 public class SilverBarOrderApiTest {
+
+    @Value("${silverbar.api.host}")
+    private String host;
+    @Value("${silverbar.api.rootPath}")
+    private String rootPath;
 
     @LocalServerPort
     private String port;
@@ -36,16 +43,15 @@ public class SilverBarOrderApiTest {
             randomUUID().toString(),
             1500,
             100,
-            OrderType.BUY
-    );
+            OrderType.BUY);
 
     @Before
     public void setUp() {
-        silverBarClient = new SilverBarClient(port);
+        silverBarClient = new SilverBarClient(port, host, rootPath);
     }
 
     @Test
-    public void registersOrder() throws IOException {
+    public void registersOrder() {
 
         OrderResponseDto orderResponseDto = silverBarClient.registerOrder(silverBarOrderDto);
 
@@ -119,7 +125,6 @@ public class SilverBarOrderApiTest {
                 .orderType(OrderType.SELL)
                 .build();
 
-
         silverBarClient.registerOrder(order1);
         silverBarClient.registerOrder(order2);
         silverBarClient.registerOrder(order3);
@@ -140,8 +145,6 @@ public class SilverBarOrderApiTest {
         assertThat(liveOrderSummary.getSellOrders().get(2))
                 .extracting("priceInPounds", "quantityInKg")
                 .containsExactly("310.0", "1.2");
-
-
     }
 
     @Test
@@ -174,7 +177,6 @@ public class SilverBarOrderApiTest {
                 .pricePerKgInPence(30600)
                 .orderType(OrderType.BUY)
                 .build();
-
 
         silverBarClient.registerOrder(order1);
         silverBarClient.registerOrder(order2);

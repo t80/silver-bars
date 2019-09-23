@@ -1,0 +1,8 @@
+logging:
+  level:
+    ROOT: DEBUG
+
+silverbar:
+  api:
+    host: http://localhost
+    rootPath: /silverbars
