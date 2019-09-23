@@ -3,6 +3,7 @@ package com.creditsuisse.silverbars.domain;
 import com.creditsuisse.silverbars.domain.repository.SilverBarOrderRepository;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 
@@ -36,6 +37,11 @@ public class SilverBarOrderService {
     }
 
     public void delete(UUID orderId) {
+
+        if (orderId == null) {
+            throw new InvalidParameterException("orderId cannot be null");
+        }
+
         silverBarOrderRepository.delete(orderId);
     }
 

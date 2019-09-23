@@ -61,6 +61,15 @@ public class SilverBarOrderServiceTest {
     }
 
     @Test
+    public void deletesOrderThrowsIfOrderIdNull() {
+
+        assertThatThrownBy(() -> silverBarOrderService.delete(null))
+                .isExactlyInstanceOf(InvalidParameterException.class);
+
+        verifyZeroInteractions(orderRepository);
+    }
+
+    @Test
     public void sortsSellOrdersAscending() {
 
         when(orderRepository.fetchAll()).thenReturn(someListOfSilverBarOrder());
