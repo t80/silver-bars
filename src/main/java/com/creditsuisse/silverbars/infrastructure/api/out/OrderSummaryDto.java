@@ -11,9 +11,9 @@ import static java.util.stream.Collectors.toList;
 public class OrderSummaryDto {
 
     @JsonProperty
-    private List<AggregatedOrder> sellOrders;
+    private final List<AggregatedOrder> sellOrders;
     @JsonProperty
-    private List<AggregatedOrder> buyOrders;
+    private final List<AggregatedOrder> buyOrders;
 
     @JsonCreator
     public OrderSummaryDto(

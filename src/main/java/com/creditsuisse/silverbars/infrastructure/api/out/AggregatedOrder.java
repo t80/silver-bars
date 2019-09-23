@@ -23,12 +23,4 @@ class AggregatedOrder {
         priceInPounds =  String.valueOf(priceInPence / 100.0);
         quantityInKg = String.valueOf(quantityInGrams / 1000.0);
     }
-
-    public String getPriceInPounds() {
-        return priceInPounds;
-    }
-
-    public String getQuantityInKg() {
-        return quantityInKg;
-    }
 }

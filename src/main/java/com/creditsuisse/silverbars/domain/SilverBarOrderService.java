@@ -97,12 +97,12 @@ public class SilverBarOrderService {
 
     private Map.Entry<Integer, Integer> aggregateByOrderQuantity(Map.Entry<Integer, List<SilverBarOrder>> silverBarOrdersForPrice) {
 
-        Integer valueOfOrderAtPrice = silverBarOrdersForPrice.getValue().stream()
+        Integer aggregatedQuantity = silverBarOrdersForPrice.getValue().stream()
                 .map(SilverBarOrder::getOrderQuantityInGram)
                 .reduce((v1, v2) -> v1 + v2).orElse(0);
 
         return new SimpleEntry<>(
                 silverBarOrdersForPrice.getKey(),
-                valueOfOrderAtPrice);
+                aggregatedQuantity);
     }
 }

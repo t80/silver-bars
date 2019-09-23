@@ -19,14 +19,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 public class ExceptionMapper {
 
-    private static final String HANDLING_EXCEPTION_TEMPLATE = "handling exception: {}";
-
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<String> catchAll(
             HttpServletRequest request,
             Exception e) {
 
-        log.info("Exception: {}", e);
+        log.error("Unknown exception", e);
 
         return new ResponseEntity<>(INTERNAL_SERVER_ERROR);
     }
@@ -36,7 +34,7 @@ public class ExceptionMapper {
             HttpServletRequest request,
             Exception e) {
 
-        log.error("Exception: {}", e);
+        log.error("InvalidParameterException:", e);
 
         return new ResponseEntity<>(BAD_REQUEST);
     }
